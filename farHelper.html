@@ -1,0 +1,455 @@
+<!doctype html>
+<head>
+<title>FAR Helper</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<body>
+<img src="cheatSheet.png" id="cheatSheet-closed" onclick="document.getElementById('cheatSheet-open').setAttribute('style', '');"/>
+<div id="cheatSheet-open" class="cheatSheet-open" style="visibility:hidden;">
+	<h2>Axes and Forces</h2>
+	<img src="cheatSheet.png" id="close-cheatSheet" onclick="document.getElementById('cheatSheet-open').setAttribute('style', 'visibility: hidden;');"/>
+	<img src="axesAndForces.gif" />
+	
+	<h4 id="open-help" style ="" onclick="document.getElementById('sidebar-help').setAttribute('style', ''),
+	document.getElementById('open-help').setAttribute('style', 'visibility: hidden;'),
+	document.getElementById('cheatSheet-open').setAttribute('class', 'cheatSheet-open help');">Help &or;&or;&or;&or;&or;&or;</h4>
+	<div id='sidebar-help' style="visibility: hidden;">
+	<h4 id="close-help" onclick="document.getElementById('sidebar-help').setAttribute('style', 'visibility:hidden;'),
+	document.getElementById('open-help').setAttribute('style', ''),
+	document.getElementById('cheatSheet-open').setAttribute('class', 'cheatSheet-open');"> Help &and;&and;&and;&and;&and;&and; </h4>
+	<br />
+		<p>Derivatives are <span style="color: #BFF428;">very important</span>, <span style="color: #E3E285;">important</span>, and <span style="color: #8C3130;">
+		unimportant.</span></p><br /><br />
+		<p>
+			X, Y, Z: Net force in respective direction. <br />
+			u, v, w: Velocity in respective direction. v can also (and will usually) mean total velocity (u + v + w). <br />
+			q, p, r: Movement rate in respective direction. <br />
+			L, M, N: Moment acting on respective axis. L can also mean lift. <br />
+			<br />
+			&alpha;: The angle between the wing and oncoming air. <br />
+			&beta;: Rotation of the aircraft centerline from the relative wind. <br />
+			D: Drag. <br />
+			Y: Sideforce. <br />
+			M: Mach number. <br />
+		<br />
+		</p>
+		
+		
+		<a href='https://github.com/ferram4/Ferram-Aerospace-Research/wiki/Definition-of-Terms-and-Symbols'>Official explanation of terms.</a> <br />
+		<a href='https://aviation.stackexchange.com/questions/17291/what-are-lateral-longitudinal-and-directional-stability'>What are these axes?</a> <br />
+		<a href='http://wright.nasa.gov/airplane/torque.html'>What is this "moment" you speak of?</a>
+		
+	</div>
+</div>
+
+<img src="https://kerbalspacehelper.neocities.org/resources.png" id="resources-closed" onclick="document.getElementById('resources-open').setAttribute('style', ''),
+document.getElementById('resources-closed').setAttribute('style', 'visibility:hidden;');" style=""/>
+<div id="resources-open" style="visibility:hidden;">
+	<a href="https://github.com/ferram4/Ferram-Aerospace-Research/wiki">Official wiki</a><br /><br />
+	<a href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Wing_profile_nomenclature.svg/500px-Wing_profile_nomenclature.svg.png">Angle of attack explanation image</a><br />
+	<a href="http://www.theairlinepilots.com/forumarchive/principlesofflight/sideslip.jpg">Sideslip explanation image</a><br />
+	<a href="https://en.wikipedia.org/wiki/Stall_(fluid_mechanics)">Wing stall Wikipedia article</a><br />
+	<a href="http://www.pilotfriend.com/training/flight_training/fxd_wing/landing.htm">Descent & landing; glide slope; flaps</a><br />
+	<a href="https://www.grc.nasa.gov/www/K-12/airplane/ldrat.html">Lift to drag ratio NASA article</a><br />
+	<a href="http://www.engineeringtoolbox.com/moment-inertia-torque-d_913.html">Moment of inertia article</a><br />
+	<a href="https://nexus172.wordpress.com/2009/04/08/what-are-moments-and-products-of-inertia/">Product of inertia article</a><br />
+	<br />
+	<a href="http://www.reddit.com/r/KerbalAcademy">Kerbal Academy - get less confused&trade;!</a>
+	<img src="https://kerbalspacehelper.neocities.org/resources.png" id="close-resources" onclick="document.getElementById('resources-open').setAttribute('style', 'visibility:hidden;'),
+	document.getElementById('resources-closed').setAttribute('style', '');;"/>
+</div>
+<div id="container">
+	<script type="text/javascript"> 
+	function tabClick(tab, tabContent) {
+		document.getElementsByClassName('active')[0].removeAttribute('class', 'active');
+		tab.setAttribute('class', 'active');
+		document.getElementsByClassName('tabactive')[0].className = "tab";
+		document.getElementById(tabContent).className = "";
+		document.getElementById(tabContent).setAttribute('class','tabactive');
+    } 
+	</script>
+	<H1>FAR Analysis</H1>
+	
+	<ul class="tab-links">
+		<li class="active" onclick="javascript:tabClick(this,'tab1')"><a href="#static-analysis">Static Analysis</a></li>
+		<li onclick="javascript:tabClick(this,'tab2')"><a href="#data-and-stability">Data and Stability Derivatives</a></li>
+		
+		
+		<li onclick="javascript:tabClick(this,'tab3')"><a class="tooltip" href="#static-deriv-simulation">
+			<div class="raise-gear">Static Deriv Simulation<span style="color: #000;" class="custom info"><img src="Info.png" alt="Info" height="48" width="48" />
+						<em>Information</em>Coming soon.</span></div></a></li>
+		
+		
+		<li onclick="javascript:tabClick(this,'tab4')" ><a class="tooltip" href="#transonic-design">
+			<div class="raise-gear">Transonic Design<span style="color: #000;" class="custom info"><img src="Info.png" alt="Info" height="48" width="48" />
+						<em>Information</em>Coming soon.</span></div></a></li>
+		
+		
+		<li ><a class="tooltip" href="#"><div class="raise-gear">Raise Gear<span style="color: #000;" class="custom warning"><img src="Warning.png" alt="Warning" height="48" width="48" />
+						<em>Warning</em>Don't forget to test your aircraft with gear both up and down!</span></div></a></li>
+	</ul>
+	
+	<div class="tab-content">
+        
+		<div id="tab1" class="tabactive">
+				<a class="tooltip" href="#">
+					<div id="cl" class="coefficient-tooltip">
+						<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Coefficient of lift.</span>
+					</div>
+				</a>
+			
+			<a class="tooltip" href="#">	
+				<div id="cd" class="coefficient-tooltip">
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+					<em>Information</em>Coefficient of drag.</span>
+				</div>
+			</a>
+			
+			<a class="tooltip" href="#">
+				<div id="cm" class="coefficient-tooltip">
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Pitch moment coefficient. This determines pitch stability and control authority and is dependent on the relationship between the 
+						center of lift and to the center of mass. Notice how it changes with AOA and speed? Notice how the stock game's CoL tool doesn't reflect this reality? That's right, 
+						it's garbage, don't use it!</span>
+				</div>
+			</a>
+				
+			<a class="tooltip" href="#">
+				<div id="ld" class="coefficient-tooltip">
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Lift over drag. </span>
+					</div>
+			</a>
+			<div id="static-analysis-explanation">
+				<p>The <span style="color: #E3E285;">pitch moment coefficient</span> determines the pitch stability and responsiveness of your aircraft. The steeper the downward slope the more stable, but the slower it is to 
+				pitch change. An upward slope is unstable and will not fly for very long, but will do impressive back flips! The further back the CoL (and the more stable and sluggish) the 
+				more the craft will want to pitch down. This is often negligible but will need to be taken into account if very high stability is sought.</p>
+				<br /><br />
+				<p>A high <span style="color: #64BC68;">lift to drag ratio</span> is desirable for carrying cargo, but as lift is inexorably tied to drag (you can't produce one without the other)
+				a low <span style="color: #8C3130;">drag coefficient</span> is of prime importance for very high speed vehicles.</p>
+				<br /><br />
+				<p>Where a line splits and then rejoins shows a <a href="https://en.wikipedia.org/wiki/Stall_(fluid_mechanics)">wing stall condition</a> (a sudden reduction in lift). The more significant and sudden the separation the more future you will hate present you.</p>
+				
+				
+			</div>
+			<div id="aoa">
+            	<img src="aoaSweep.png" id="aoaSweep" />
+			</div>
+			
+			
+			<h3>Lower:</h3>
+			<div class="input aoaInput">0</div>
+			
+			<a class="tooltip" href="#">
+			<h3>Upper:</h3>
+			<span class="custom warning"><img src="Warning.png" alt="Warning" height="48" width="48" />
+			<em>Warning</em>For high performance aircraft don't leave the upper AOA range at only 25&deg;. What if your spaceplane is unstable at 45&deg;?</span>
+			<div class="input aoaInput">25</div>
+			</a>
+			
+			
+			<a class="tooltip" href="#">
+			<h3>Num Pts:</h3>
+			<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+				<em>Information</em>How many points of data it will calculate. Different resolutions can cause drastically different results, 
+				so using a higher resolution (like 1,000 points) can be a good idea if you need higher precision or are experiencing unexpected results.</span>
+			<div class="input aoaInput">100</div>
+			</a>
+			
+			<a class="tooltip" href="#">
+			<h3>Mach</h3>
+			<span class="custom warning"><img src="Warning.png" alt="Warning" height="48" width="48" />
+			<em>Warning</em>Don't think about going hypersonic if you don't know if you can get off the ground! Before all else make sure that your craft is stable at a reasonable
+			take off speed.</span>
+			<div class="input aoaInput">0.2</div>
+			</a>
+			
+			<div class="button">Sweep AOA</div>
+        </div>
+ 
+        <div id="tab2" class="tab">
+            <h3>Flight condition:</h3> <br />
+			
+			<a class="tooltip" href="#">
+			<h3>Planet:</h3>
+			<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+				<em>Information</em>In case flying planes on Kerbin is too easy for you.</span>
+			<div id="kerbin" class="button">Kerbin</div>
+			</a>
+			
+			<a class="tooltip" href="#">
+			<h3>Altitude (km):</h3>
+			<span class="custom warning"><img src="Warning.png" alt="Warning" height="48" width="48" />
+				<em>Warning</em>It is very important to test your vehicle at multiple altitudes. If you're building a spaceplane don't forget- very high altitudes and speeds change flight characteristics quite a lot!</span>
+			<div id="altitude" class="input"><p>0</p></div>
+			</a>
+			
+			<a class="tooltip" href="#">
+			<h3>Mach Number:</h3>
+			<div id="mach-number" class="input"><p>.35</p></div>
+			<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+				<em>Information</em>The speed at which you would like to test the vehicle relative to the speed of sound. Mach .8 is simply 80% the speed of sound (which changes with altitude). 
+			</a>
+			
+			<a class="tooltip" href="#">
+			<h3>Flap setting:</h3> 
+			<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+				<em>Information</em>Not currently using flaps? You should be! Other than assisting take off, using the first setting of flaps allows for a better descent and more control of your glide slope (the angle of your descent path, not the orientation of your plane; usually 3&deg in real life).
+				Using full flaps on final (the last turn if flying a traffic pattern, otherwise just use when you're very close) while using throttle to maintain airspeed allows for 
+				fine glide slope control that simply isn't possible without flaps, and allows for much slower, safer, and easier landings. Use them!
+				</span>
+			</a>
+			<div id="flap-setting" class="button">0 (up)</div>
+			
+			<a class="tooltip" href="#">
+			<h3>Spoilers:</h3>
+			<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+				<em>Information</em>You can slow your plane down without heavy airbrakes using spoilers. You're not going back to stock aero now, are you?</span>
+			</a>
+			
+			<input type="radio" class="css-checkbox" id="spoiler-radio" />			
+			<label for="spoiler-radio" class="css-label">Retracted</label>
+			<a class="tooltip" href="#">
+			<div id="calculate" class="button">Calculate Stability Derivatives</div>
+			<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+				<em>Information</em>Make the magic happen!</span></a>
+				
+			<table id="aircraft-properties">
+				<tr>
+					<td><h3>Aircraft Properties</h3></td>
+					
+					<td><a class="tooltip" href="#"><div class="green"><h3>Moments of Inertia</h3></div>
+						<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>A measure of an object's resistance to changes in a rotation direction. 
+						Moment of inertia has the same relationship to angular acceleration as mass has to linear acceleration. See link in resources side bar for 
+						more info.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green"><h3>Products of Inertia</h3></div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>If a rotating object is not symmetric about all three axes than it will not actually rotate about the axes that we have 
+						used and described so far, but around some other axes. These off-axis moments of inertia are products of inertia and may be thought of as the 
+						measurement of dynamic imbalance caused by asymmetrically distributed mass. See link in resources side bar for 
+						more info.</span>
+					</a></td>
+					<td><h3>Level Flight</h3></td>
+				</tr>
+				
+				<tr>
+					<td>
+					<a class="tooltip" href="#"><div class="green">Ref Area: 0 m&sup2;</div>
+						<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Lifting surface area including lift from the body and vertical surfaces.</span>
+					</a>
+					</td>
+				
+					<td><a class="tooltip" href="#"><div class="green">Ixx: 0 kg * m&sup2;</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Resistance to roll change.</span>
+					</a></td>
+					
+					<td><a class="tooltip" href="#"><div class="green">Ixy: 0 kg * m&sup2;</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Resistance to roll due to pitch. Is equal to resistance to pitch due to roll.</span>
+					</a></td>	
+					
+					<td><a class="tooltip" href="#"><div class="green">u0: 0 m/s</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Air speed determined by the mach number entered earlier and temperature.</span>
+					</a></td>
+				</tr>
+				
+				<tr>
+					<td>Scaled Chord: 0 m&sup2</td>
+					
+					<td><a class="tooltip" href="#"><div class="green">Iyy: 0 kg * m&sup2;</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Resistance to pitch change.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green">Iyz: 0 kg * m&sup2;</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Resistance to pitch due to yaw. Is equal to resistance to yaw due to pitch.</span>
+					</a></td>
+					
+					<td><a class="tooltip" href="#"><div class="green">Cl: 0 Cd: 0</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Coefficients of lift and drag during level flight at above speed.</span>
+					</a></td>
+				</tr>
+				
+				<tr>
+					<td>Scaled Span: 0 m</td>
+					<td><a class="tooltip" href="#"><div class="green">Izz: 0 kg * m&sup2;</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Resistance to yaw change.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green">Ixz: 0 kg * m&sup2;</div>
+					<span class="custom info"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Resistance to roll due to yaw. Is equal to resistance to yaw due to roll.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green">AoA: 0 deg</div>
+					<span class="custom warning"><img src="Warning.png" alt="Warning" height="48" width="48" />
+						<em>Information</em>Make sure to check that you don't need to maintain an extreme angle of attack at a speed you wish to travel.
+						Always try to maintain a takeoff AoA that is less than 10&deg;, ideally less than 6&deg;. If too high an AoA is required to maintain level 
+						flight than more lift is necessary, either by an increase in speed (never fly that slowly at that altitude) or wing area.</span>
+					</a>
+					</td>	
+				</tr>
+			</table>	<br />
+			<h3>Longitudinal Derivatives</h3>
+			
+			<table class="inset-table">
+				<tr>
+					<td><h3>Down Vel Derivatives</h3></td>
+					<td><h3>Fwd Vel Derivatives</h3></td>
+					<td><h3>Pitch Rate Derivatives</h3></td>
+					<td><h3>Pitch Ctrl Derivatives</h3></td>
+				</tr>
+				
+				<tr>
+					<td><a class="tooltip" href="#"><div class="yellow">Zw: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Lift. If this is incorrect than you are very talented.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="red">Zu: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How vertical velocity affects lift. Can be negative.</span>
+					</a></td>
+					
+					<td><a class="tooltip" href="#"><div class="red">Zq: 0 m/s</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How vertical velocity changes with pitch rate. May make minor changes under very large amounts of pitching.</span>
+					</a></td>
+					
+					<td><a class="tooltip" href="#"><div class="red">Z&delta;e: 0 m/s</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How vertical velocity changes with elevator deflection.</span>
+					</a></td>
+					
+				</tr>
+				
+				<tr>
+					<td><a class="tooltip" href="#"><div class="red">Xw: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How angle of attack affects forward velocity. Can be negative.</span>
+					</a></td>
+					</td>
+					<td><a class="tooltip" href="#"><div class="yellow">Xu: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Drag. Ferram writes, and I quote, "If Xu is incorrect, you have summoned the Kraken and should file a bug report."</span>
+					</a></td>
+					
+					<td><a class="tooltip" href="#"><div class="red">Xq: 0 m/s</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How forward velocity changes with with pitch rate.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="yellow">X&delta;e: 0 m/s</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Elevator performance: how forward velocity changes with elevator deflection, or drag.</span>
+					</a>  
+					</td>
+				</tr>
+				
+				<tr>
+					<td><a class="tooltip" href="#"><div class="green">Mw: 0 (m * s)<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Whether or not your center of lift is positioned correctly. Larger negative values are more stable and sluggish, lower is more unstable and responsive,
+						positive is a Kerbal mechanical bull.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="red">Mu: 0 (m * s)<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How pitching moment changes with forward speed.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green">Mq: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Pitch damp: the ability of the craft dampen pitching.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green">M&delta;e: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Elevator performance: pitch control authority. Get as large as possible while trying to minimize X&delta;e.</span>
+					</a></td>
+				</tr>
+			</table>
+			<br />
+			
+			<h3>Lateral Derivatives</h3>
+			<table class="inset-table" id="lateral">
+				<tr>
+					<td><h3>Sideslip Derivatives</h3></td>
+					<td><h3>Roll Rate Derivatives</h3></td>
+					<td><h3>Yaw Rate Derivatives</h3></td>
+				</tr>
+				
+				<tr>
+					<td><a class="tooltip" href="#"><div class="green">Y&beta;: 0 m/s&sup2;</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How sideforce changes with sideslip: yaw stability. Makes the plane want to fly straight instead of skating sideways.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="red">Yp: 0 m/s</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How sideforce changes with roll rate. Not important on its own but if other roll and yaw derivatives are also poor can turn the plane into a dutch roll-happy nightmare to fly.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="red">Yr: 0 m/s</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How sideforce changes with yaw rate.  Not important on its own but if other roll and yaw derivatives are also poor can turn the plane into a dutch roll-happy nightmare to fly.</span>
+					</a></td>
+				</tr>
+				
+				<tr>
+					<td><a class="tooltip" href="#"><div class="green">L&beta;: 0 s&sup2;</div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Roll due to sideslip, which can be very significant. For this reason, inadequate vertical stabilizer can cause
+						roll as well as yaw instability.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green">Lp: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Roll damp: the ability of the craft dampen rolling. If too large it can make rolling difficult, and if large enough may make turning impossible.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="red">Lr: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How rolling moment changes with yaw rate.  Not important on its own but if other roll and yaw derivatives are also poor can turn the plane into a dutch roll-happy nightmare to fly.</span>
+					</a></td>
+				</tr>
+				
+				<tr>
+					<td><a class="tooltip" href="#"><div class="green">N&beta;: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Static yaw stability, exactly analagous to Mw. Higher values will increase stability but reduce your ability to yaw quickly,
+						in case you care about that for some reason.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="red">Np: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>How yawing moment changes with roll rate.  Not important on its own but if other roll and yaw derivatives are also poor can turn the plane into a dutch roll-happy nightmare to fly.</span>
+					</a></td>
+					<td><a class="tooltip" href="#"><div class="green">Nr: 0 s<sup>-1</sup></div>
+					<span class="custom warning"><img src="Info.png" alt="Information" height="48" width="48" />
+						<em>Information</em>Yaw damp: the ability of the craft to dampen yawing. </span>
+					</a></td>
+				</tr>
+			</table>
+				
+        </div>
+ 
+        <div id="tab3" class="tab">
+            <p>Coming soon.</p>
+            
+        </div>
+ 
+        <div id="tab4" class="tab">
+            <p>Coming soon.</p>
+        </div>
+		
+		<div id="tab5" class="tab">
+            <p>Tab #5 content goes here!</p>
+        </div>
+    </div>
+	
+
+
+	
+	
+</div>
+
+</body>
+</html>
